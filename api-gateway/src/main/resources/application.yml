@@ -1,0 +1,48 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: API-GATEWAY
+
+  cloud:
+    gateway:
+      server:
+        webflux:
+          routes:
+
+            - id: auth-service
+              uri: lb://AUTH-SERVICE
+              predicates:
+                - Path=/auth/**,/auth/v3/api-docs
+
+            - id: product-service
+              uri: lb://PRODUCT-SERVICE
+              predicates:
+                - Path=/products/**,/categories/**,/products/v3/api-docs
+            - id: order-service
+              uri: lb://ORDER-SERVICE
+              predicates:
+                - Path=/orders/**,/orders,/order/v3/api-docs
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+
+
+jwt:
+  secret: mySuperSecretKeyForJwtAuthentication123456789
+
+springdoc:
+  swagger-ui:
+    urls:
+
+      - name: Auth Service
+        url: /auth/v3/api-docs
+
+      - name: Product Service
+        url: /products/v3/api-docs
+
+      - name: Order Service
+        url: /orders/v3/api-docs
